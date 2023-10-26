@@ -8,11 +8,11 @@ import sw_semester.todolist.service.AuthService;
 
 
 @RestController
-@RequestMapping("/api/vi/auth")
+@RequestMapping("/user/")
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthService service;
-    @PostMapping("/register")
+    @PostMapping("/join")
     public ResponseEntity<AuthenticationResponse> resister(
             @RequestBody RegisterRequest request
     ){
@@ -22,12 +22,11 @@ public class AuthenticationController {
 
 
     }
-    @PostMapping("/signin")
-    public ResponseEntity<AuthenticationResponse> resister(
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request
-    ){
+    ) {
         return ResponseEntity.ok(service.authenticate(request));
-
     }
 
 }

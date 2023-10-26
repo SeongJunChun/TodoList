@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import sw_semester.todolist.service.Jwtservice;
+import sw_semester.todolist.token.TokenRepository;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -23,7 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final Jwtservice jwtservice;
     private final UserDetailsService userDetailsService;
-
+    private final TokenRepository tokenRepository;
     @Override
     protected void doFilterInternal(
             @Nullable HttpServletRequest request,
@@ -42,7 +43,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         email = jwtservice.extractUserEmail(jwt);// jwt토큰 으로 부터 사용자 이메일 추출
         if (email != null && SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
-            if (jwtservice.isTokenValid(jwt, userDetails)){
+            var isTokenValid = tokenRepository.findByToken(jwt)
+                    .map(t -> !t.isExpired()&&!t.isRevoked())
+                    .orElse(false);
+            if (jwtservice.isTokenValid(jwt, userDetails)&&isTokenValid){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
