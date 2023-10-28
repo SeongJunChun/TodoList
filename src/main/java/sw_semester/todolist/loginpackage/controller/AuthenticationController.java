@@ -1,14 +1,14 @@
-package sw_semester.todolist.controller;
+package sw_semester.todolist.loginpackage.controller;
 
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sw_semester.todolist.service.AuthService;
+import sw_semester.todolist.loginpackage.service.AuthService;
 
 
 @RestController
-@RequestMapping("/user/")
+@RequestMapping("/api/")
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthService service;
