@@ -1,35 +1,41 @@
-package sw_semester.todolist.service;
+package sw_semester.todolist.loginpackage.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import sw_semester.todolist.controller.AuthenticationRequest;
-import sw_semester.todolist.controller.AuthenticationResponse;
-import sw_semester.todolist.controller.RegisterRequest;
+import sw_semester.todolist.entity.UserInfo;
+import sw_semester.todolist.loginpackage.controller.AuthenticationRequest;
+import sw_semester.todolist.loginpackage.controller.AuthenticationResponse;
+import sw_semester.todolist.loginpackage.controller.RegisterRequest;
 import sw_semester.todolist.entity.User;
 import sw_semester.todolist.entity.Role;
 import sw_semester.todolist.repository.MemberRepository;
-import sw_semester.todolist.token.Token;
-import sw_semester.todolist.token.TokenRepository;
-import sw_semester.todolist.token.TokenType;
+import sw_semester.todolist.loginpackage.token.Token;
+import sw_semester.todolist.loginpackage.token.TokenRepository;
+import sw_semester.todolist.loginpackage.token.TokenType;
+import sw_semester.todolist.repository.UserInfoRepository;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final MemberRepository repository;
+    private final UserInfoRepository userInfoRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final Jwtservice jwtservice;
     private final AuthenticationManager authenticationManager;
     public AuthenticationResponse register(RegisterRequest request) {
-
+        UserInfo userInfo = UserInfo.builder().build();
+        userInfoRepository.save(userInfo);
 
         var user = User.builder()
                 .memberName(request.getName())
                 .memberEmail(request.getEmail())
+                .profileImageUrl("여기에 프로필 이미지URL 넣을거임")
                 .memberPassword(passwordEncoder.encode(request.getPassword()))
+                .userInfo(userInfo)
                 .role(Role.USER)
                 .build();
         var saveUser = repository.save(user);
