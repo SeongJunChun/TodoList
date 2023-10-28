@@ -4,7 +4,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import sw_semester.todolist.token.Token;
+import sw_semester.todolist.loginpackage.token.Token;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -23,21 +23,52 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private  Integer id;
+    private  Long  id;
 
     @Column(unique = true)
     private String memberEmail;
 
-    @Column
+    @Column(nullable = false)
     private String memberPassword;
 
-    @Column
+    @Column(nullable = false)
     private String memberName;
+
+    @Column(nullable = true)
+    private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
     private Role role;
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
+
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = true)
+    private UserInfo userInfo;
+
+
+
+    public void hasWroteArticle(){
+        this.userInfo.articleCountPlus();
+    }
+    public void hasDeletedArticle(){
+        this.userInfo.articleCountMinus();
+    }
+
+    public void hasFollowed(){
+        this.userInfo.followerCountPlus();
+    }
+    public void hasUnFollowed(){
+        this.userInfo.followerCountMinus();
+    }
+
+    public void hasFollowing(){
+        this.userInfo.followCountPlus();
+    }
+    public void hasUnFollowing(){
+        this.userInfo.followCountMinus();
+    }
 
     /*DTO로 받아온값 엔티티로 변확해서 저장하는 부분 타 클래스에서 호출해서 사용*/
 
