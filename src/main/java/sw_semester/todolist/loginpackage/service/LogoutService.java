@@ -1,10 +1,10 @@
-package sw_semester.todolist.service;
+package sw_semester.todolist.loginpackage.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
-import sw_semester.todolist.token.TokenRepository;
+import sw_semester.todolist.loginpackage.token.TokenRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

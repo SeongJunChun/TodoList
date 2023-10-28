@@ -1,4 +1,4 @@
-package sw_semester.todolist.token;
+package sw_semester.todolist.loginpackage.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package sw_semester.todolist.service;
+package sw_semester.todolist.loginpackage.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

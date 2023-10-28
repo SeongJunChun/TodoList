@@ -1,4 +1,4 @@
-package sw_semester.todolist.controller;
+package sw_semester.todolist.loginpackage.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

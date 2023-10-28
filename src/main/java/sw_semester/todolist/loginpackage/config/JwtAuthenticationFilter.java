@@ -1,4 +1,4 @@
-package sw_semester.todolist.config;
+package sw_semester.todolist.loginpackage.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
@@ -9,8 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import sw_semester.todolist.service.Jwtservice;
-import sw_semester.todolist.token.TokenRepository;
+import sw_semester.todolist.loginpackage.service.Jwtservice;
+import sw_semester.todolist.loginpackage.token.TokenRepository;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

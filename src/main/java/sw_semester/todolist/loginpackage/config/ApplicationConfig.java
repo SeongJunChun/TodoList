@@ -1,4 +1,4 @@
-package sw_semester.todolist.config;
+package sw_semester.todolist.loginpackage.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
