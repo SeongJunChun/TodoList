@@ -38,6 +38,9 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String profileImageUrl;
 
+    @Column(nullable = true)
+    private String selfIntroduction;
+
     @Enumerated(EnumType.STRING)
     private Role role;
     @OneToMany(mappedBy = "user")

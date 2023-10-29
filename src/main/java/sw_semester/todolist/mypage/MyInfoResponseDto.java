@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class MyInfoResponseDto {
     private String myProfileImageUrl;
     private String memberName;
+    private String selfIntroduction;
     private Long articleCount;
     private Long followerCount;
     private Long followCount;

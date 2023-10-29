@@ -33,6 +33,7 @@ public class AuthService {
         var user = User.builder()
                 .memberName(request.getName())
                 .memberEmail(request.getEmail())
+                .selfIntroduction("여기에 한줄 자기소개")
                 .profileImageUrl("여기에 프로필 이미지URL 넣을거임")
                 .memberPassword(passwordEncoder.encode(request.getPassword()))
                 .userInfo(userInfo)
