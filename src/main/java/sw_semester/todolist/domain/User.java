@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import sw_semester.todolist.loginpackage.token.Token;
+import sw_semester.todolist.mypage.ProfileUpdateRequestDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -79,6 +80,12 @@ public class User implements UserDetails {
     }
     public void hasUnFollowing(){
         this.userInfo.followCountMinus();
+    }
+
+    public void update(ProfileUpdateRequestDto profileUpdateRequestDto){
+        this.memberName = profileUpdateRequestDto.getMemberName();
+        this.profileImageUrl = profileUpdateRequestDto.getProfileImageUrl();
+        this.selfIntroduction = profileUpdateRequestDto.getSelfIntroduction();
     }
 
     /*DTO로 받아온값 엔티티로 변확해서 저장하는 부분 타 클래스에서 호출해서 사용*/
