@@ -2,11 +2,9 @@ package sw_semester.todolist.mypage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import sw_semester.todolist.entity.User;
+import sw_semester.todolist.domain.User;
 
 @RequiredArgsConstructor
 @RestController

@@ -1,4 +1,4 @@
-package sw_semester.todolist.entity;
+package sw_semester.todolist.domain;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import sw_semester.todolist.loginpackage.token.Token;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,6 +42,13 @@ public class User implements UserDetails {
     private Role role;
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
+
+    @OneToMany(mappedBy = "follower",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private final List<Follow> followerList = new ArrayList<>(); //내가 팔로우를 하는 유저들의 리스트
+
+    @OneToMany(mappedBy = "followee",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private final List<Follow> followeeList = new ArrayList<>(); //나를 팔로우 하는 유저들의 리스트
+
 
 
     @OneToOne(fetch = FetchType.EAGER)

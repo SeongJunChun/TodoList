@@ -1,4 +1,4 @@
-package sw_semester.todolist.entity;
+package sw_semester.todolist.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

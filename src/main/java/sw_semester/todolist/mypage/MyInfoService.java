@@ -2,7 +2,7 @@ package sw_semester.todolist.mypage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import sw_semester.todolist.entity.User;
+import sw_semester.todolist.domain.User;
 import sw_semester.todolist.repository.MemberRepository;
 
 @RequiredArgsConstructor
