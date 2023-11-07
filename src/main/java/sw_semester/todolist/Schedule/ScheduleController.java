@@ -1,16 +1,12 @@
 package sw_semester.todolist.Schedule;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import sw_semester.todolist.domain.Schedule;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/schedule")
 public class ScheduleController {
     private ScheduleService scheduleService;
@@ -23,36 +19,29 @@ public class ScheduleController {
     @PostMapping("/scheduleCreate")
     public Schedule createSchedule(@RequestBody ScheduleRequestDto requestDto) {
         Schedule schedule = new Schedule(requestDto);
-        return scheduleService.createSchedule(schedule);
+        return scheduleService.create(requestDto);
     }
 
-    @GetMapping("/schedlueList")
-    public List<ScheduleResponseDto> getAllSchedules() {
-        List<Schedule> schedules = scheduleService.getAllSchedules();
-        List<ScheduleResponseDto> responseDtos = new ArrayList<>();
-        for (Schedule schedule : schedules) {
-            ScheduleResponseDto responseDto = new ScheduleResponseDto(schedule.getId(), schedule.getDate(), schedule.getHeadline(), schedule.getContext(), schedule.getIsDone());
-            responseDtos.add(responseDto);
-        }
-        return responseDtos;
+    @GetMapping("/scheduleList")
+    public List<Schedule> getSchedulesList() {
+        return scheduleService.findAll();
     }
 
 
-    @GetMapping("{id}")
-    public ResponseEntity<ScheduleResponseDto> getScheduleById(@PathVariable Long id) {
-        Schedule schedule = scheduleService.getScheduleById(id);
-        if (schedule != null) {
-            ScheduleResponseDto responseDto = new ScheduleResponseDto(schedule.getId(), schedule.getDate(), schedule.getHeadline(), schedule.getContext(), schedule.getIsDone());
-            return ResponseEntity.ok(responseDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/{id}")
+    public Schedule getSchedule(@PathVariable("id") Long id) {
+        return scheduleService.findOne(id);
     }
 
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
-        scheduleService.deleteSchedule(id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/{id}")
+    public Schedule updateSchedule(@RequestBody ScheduleRequestDto requestDto, @PathVariable("id") Long id) {
+        Schedule schedule = new Schedule(requestDto);
+        return scheduleService.update(id, requestDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteScheule(@PathVariable("id") Long id) {
+        scheduleService.delete(id);
     }
 }
