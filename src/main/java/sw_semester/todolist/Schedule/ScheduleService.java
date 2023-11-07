@@ -32,7 +32,7 @@ public class ScheduleService {
     }
 
     @Transactional
-    public Schedule update(Long id, ScheduleRequestDto newScheduleDto){
+    public void update(Long id, ScheduleRequestDto newScheduleDto){
         Schedule schedule = scheduleRepository.findById(id)
                 .orElse(null);
         if(schedule != null) {
@@ -41,20 +41,17 @@ public class ScheduleService {
             schedule.setDate(newScheduleDto.getDate());
             schedule.setUserId(newScheduleDto.getUserId());
         }
-        return schedule;
     }
 
 
     @Transactional
-    public Schedule delete(Long id) {
+    public void delete(Long id) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElse(null);
 
         if (schedule != null) {
             scheduleRepository.delete(schedule);
         }
-
-        return schedule;
     }
 
 
