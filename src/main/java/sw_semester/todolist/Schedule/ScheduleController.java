@@ -19,7 +19,7 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
-    @PostMapping("/scheduleCreate")
+    @PostMapping("/create")
     public Schedule createSchedule(@RequestBody ScheduleRequestDto requestDto) {
         Schedule schedule = new Schedule(requestDto);
         return scheduleService.create(requestDto);
