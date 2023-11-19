@@ -46,6 +46,6 @@ bootJar {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
 }
