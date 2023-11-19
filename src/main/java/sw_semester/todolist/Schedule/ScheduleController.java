@@ -60,4 +60,6 @@ public class ScheduleController {
     public void deleteSchedule(@PathVariable("id") Long id) {
         scheduleService.delete(id);
     }
+
+    
 }
