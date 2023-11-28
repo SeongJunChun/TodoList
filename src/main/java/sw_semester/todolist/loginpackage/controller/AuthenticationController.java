@@ -35,8 +35,15 @@ public class AuthenticationController {
     }
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
+            @RequestBody AuthenticationRequest request, Errors errors
     ) {
+        if (errors.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+            for (FieldError error : errors.getFieldErrors()) {
+                errorMap.put(error.getField(), error.getDefaultMessage());
+                throw new UserRequestException("유효성 검사 실패함",errorMap);
+            }
+        }
         return ResponseEntity.ok(service.authenticate(request));
     }
 

@@ -20,6 +20,7 @@ import sw_semester.todolist.repository.UserInfoRepository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -66,6 +67,19 @@ public class AuthService {
 
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        Optional<User> input = repository.findByMemberEmail(request.getEmail());
+        if(input.isEmpty()){
+            String errorMessage = "아이디가 존재하지 않습니다";
+            Map<String,String> errorMap = new HashMap<>();
+            errorMap.put("email",errorMessage);
+            throw new UserRequestException(errorMessage,errorMap);
+        }
+        if(!passwordEncoder.matches(request.getPassword(),input.get().getMemberPassword())){
+            String errorMessage = "잘못된 비밀번호 입니다.";
+            Map<String,String> errorMap = new HashMap<>();
+            errorMap.put("password",errorMessage);
+            throw new UserRequestException(errorMessage,errorMap);
+        }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
