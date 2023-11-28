@@ -8,5 +8,6 @@ import java.util.Optional;
 /*말그대로 저장소임 DTO받아온 값을 여기에 CURD한다 생각*/
 @Repository
 public interface MemberRepository extends JpaRepository<User, Long> {
-    Optional<User> findByMemberEmail(String memberEmail);
+     Optional<User> findByMemberEmail(String memberEmail);
+     Optional<User> findByMemberName(String memberName);
 }
