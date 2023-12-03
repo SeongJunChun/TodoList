@@ -3,11 +3,10 @@ package sw_semester.todolist.mypage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sw_semester.todolist.domain.User;
+
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -27,5 +26,9 @@ public class MyInfoController {
     public ProfileUpdateResponseDto updateProfile(@RequestBody ProfileUpdateRequestDto profileUpdateRequestDto, Errors errors, @AuthenticationPrincipal User user){
 
         return myInfoService.updateProfile(profileUpdateRequestDto, user);
+    }
+    @GetMapping("/api/myinfo/{searchKeyword}")
+    public List<MyInfoResponseDto> searchMyInfo(@PathVariable(name="searchKeyword") String keyword){
+        return myInfoService.searchMyInfo(keyword);
     }
 }

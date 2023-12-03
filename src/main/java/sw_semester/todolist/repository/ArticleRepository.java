@@ -8,4 +8,5 @@ import java.util.List;
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     List<Article> findAllByOrderByCreatedAtDesc();
+    List<Article> findAllByContentContainingOrTagContaining(String content,String tag);
 }

@@ -100,6 +100,40 @@ public class ArticleService {
                 }
             }
         }
+    public List<ArticleResponseDto> searchArticles(String keyword,User user) {
+        List<Article> articles = articleRepository.findAllByContentContainingOrTagContaining(keyword,keyword);
+
+        if (user == null) { // 로그인 하지 않은 사용자
+            List<ArticleResponseDto> articleResponseDtoList = new ArrayList<>();
+
+            for (Article article : articles) {
+                articleResponseDtoList.add(new ArticleResponseDto(article, false));
+            }
+
+            return articleResponseDtoList;
+        } else {
+            Optional<User> contextUser = userRepository.findById(user.getId());
+            List<ArticleResponseDto> articleResponseDtoList = new ArrayList<>();
+
+            if (!contextUser.isPresent()) {
+                throw new IllegalArgumentException("뭔가...문제가 있음...");
+            }
+
+            boolean isLike;
+            for (Article article : articles) {
+                isLike = false;
+                for (Liked liked : contextUser.get().getLikedList()) {
+                    if (liked.getArticle().getId().equals(article.getId())) {
+                        isLike = true;
+                        break;
+                    }
+                }
+                articleResponseDtoList.add(new ArticleResponseDto(article, isLike));
+            }
+
+            return articleResponseDtoList;
+        }
+    }
 
     @Transactional
     public ArticleResponseDto updateArticle(Long articleId, ArticleUpdateRequestDto articleUpdateRequestDto, User user) {

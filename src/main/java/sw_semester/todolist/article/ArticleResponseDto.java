@@ -16,6 +16,7 @@ public class ArticleResponseDto {
     private final LocalDateTime modifiedAt;
     private final String imageUrl;
     private final String content;
+    private final String tag;
     private final String author;
     private final String authorProfileImageUrl;
     private final Long articleId;
@@ -33,6 +34,7 @@ public class ArticleResponseDto {
         this.modifiedAt = article.getModifiedAt();
         this.imageUrl = article.getImageUrl();
         this.content = article.getContent();
+        this.tag = article.getTag();
         this.author = article.getUser().getMemberName();
         this.authorProfileImageUrl = article.getUser().getProfileImageUrl();
         this.articleId = article.getId();

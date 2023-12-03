@@ -26,6 +26,9 @@ public class Article extends TimeStamped {
     @Column(nullable = false)
     private String imageUrl;
 
+    @Column(nullable = false)
+    private String tag;
+
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
@@ -45,6 +48,7 @@ public class Article extends TimeStamped {
         this.content = articleCreateRequestDto.getContent();
         this.imageUrl = articleCreateRequestDto.getImageUrl();
         this.user = user;
+        this.tag = articleCreateRequestDto.getTag();
     }
 
 

@@ -27,6 +27,12 @@ public class ArticleApiController {
         return articleService.readArticles(user);
     }
 
+    @GetMapping("/api/articles/search/{keyword}")
+    public List<ArticleResponseDto> searchArticles(@PathVariable(name="keyword") String keyword, @AuthenticationPrincipal User user){
+
+        return articleService.searchArticles(keyword,user);
+    }
+
     @GetMapping("/api/articles/{articleId}")
     public ArticleResponseDto readArticle(@PathVariable Long articleId, @AuthenticationPrincipal User user){
         return articleService.readArticle(articleId, user);
