@@ -18,13 +18,6 @@ public class MyInfoResponseDto {
     private Long followCount;
 
 
-    /*public MyInfoResponseDto(String myProfileImageUrl, String memberName, Long articleCount, Long followerCount, Long followCount) {
-        this.myProfileImageUrl = myProfileImageUrl;
-        this.memberName = memberName;
-        this.articleCount = articleCount;
-        this.followerCount = followerCount;
-        this.followCount = followCount;
-    }*/
 
 
 }

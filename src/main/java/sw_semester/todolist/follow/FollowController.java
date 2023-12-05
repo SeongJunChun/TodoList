@@ -13,7 +13,7 @@ public class FollowController {
     @PostMapping("/api/follow/{userId}")
     public Boolean followUser(@PathVariable Long userId, @AuthenticationPrincipal User user){
         if (user.getId().equals(userId)){
-            throw new UserRequestException("본인을 팔로우할 수 없습니다.");
+            throw new FollowRequestException("본인을 팔로우할 수 없습니다.");
         }
         return followService.toggleUser(userId, user);
     }

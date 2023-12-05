@@ -3,10 +3,13 @@ package sw_semester.todolist.mypage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sw_semester.todolist.domain.User;
-import sw_semester.todolist.follow.UserRequestException;
+import sw_semester.todolist.follow.FollowRequestException;
 import sw_semester.todolist.repository.MemberRepository;
+import sw_semester.todolist.repository.UserInfoRepository;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -31,10 +34,25 @@ public class MyInfoService {
         if (found.isPresent()) {
             found.get().update(profileUpdateRequestDto);
         } else {
-            throw new UserRequestException("해당 유저가 없습니다. id=" + user.getId());
+            throw new FollowRequestException("해당 유저가 없습니다. id=" + user.getId());
         }
         return new ProfileUpdateResponseDto(found.get());
     }
+    public List<MyInfoResponseDto> searchMyInfo(String keyword){
+        List<User> users = memberRepository.findAllByMemberNameContaining(keyword);
+        List<MyInfoResponseDto> infoList = new ArrayList<>();
+        for (User user : users){
+            infoList.add(new MyInfoResponseDto(
+                    user.getProfileImageUrl(),
+                    user.getMemberName(),
+                    user.getSelfIntroduction(),
+                    user.getUserInfo().getArticleCount(),
+                    user.getUserInfo().getFollowerCount(),
+                    user.getUserInfo().getFollowCount()));
+        }
+        return infoList;
+    }
+
 
 
 }

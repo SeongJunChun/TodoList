@@ -23,7 +23,7 @@ public class FollowService {
         Optional<User> HunterUser = memberRepository.findById(user.getId());
 
         if (!HunterUser.isPresent()) {
-            throw new UserRequestException("회원님의 계정을 찾을 수 없습니다.");
+            throw new FollowRequestException("회원님의 계정을 찾을 수 없습니다.");
         }
 
         if(PreyUser.isPresent()){
@@ -49,7 +49,7 @@ public class FollowService {
             PreyUser.get().hasFollowed();
             return true;
         } else {
-            throw new UserRequestException("해당 유저가 없습니다. userId=" + userId);
+            throw new FollowRequestException("해당 유저가 없습니다. userId=" + userId);
         }
     }
 }

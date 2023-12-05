@@ -11,11 +11,16 @@ import sw_semester.todolist.loginpackage.controller.AuthenticationResponse;
 import sw_semester.todolist.loginpackage.controller.RegisterRequest;
 import sw_semester.todolist.domain.User;
 import sw_semester.todolist.domain.Role;
+import sw_semester.todolist.loginpackage.exception.UserRequestException;
 import sw_semester.todolist.repository.MemberRepository;
 import sw_semester.todolist.loginpackage.token.Token;
 import sw_semester.todolist.loginpackage.token.TokenRepository;
 import sw_semester.todolist.loginpackage.token.TokenType;
 import sw_semester.todolist.repository.UserInfoRepository;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +32,18 @@ public class AuthService {
     private final Jwtservice jwtservice;
     private final AuthenticationManager authenticationManager;
     public AuthenticationResponse register(RegisterRequest request) {
+        if(repository.findByMemberEmail(request.getEmail()).isPresent()){
+            String errorMessage = "중복된 아이디가 존재합니다.";
+            Map<String,String> errorMap = new HashMap<>();
+            errorMap.put("email",errorMessage);
+            throw new UserRequestException(errorMessage,errorMap);
+        }
+        if(repository.findByMemberName(request.getName()).isPresent()){
+            String errorMessage = "중복된 이름이 존재합니다.";
+            Map<String,String> errorMap = new HashMap<>();
+            errorMap.put("name",errorMessage);
+            throw new UserRequestException(errorMessage,errorMap);
+        }
         UserInfo userInfo = UserInfo.builder().build();
         userInfoRepository.save(userInfo);
 
@@ -50,6 +67,19 @@ public class AuthService {
 
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        Optional<User> input = repository.findByMemberEmail(request.getEmail());
+        if(input.isEmpty()){
+            String errorMessage = "아이디가 존재하지 않습니다";
+            Map<String,String> errorMap = new HashMap<>();
+            errorMap.put("email",errorMessage);
+            throw new UserRequestException(errorMessage,errorMap);
+        }
+        if(!passwordEncoder.matches(request.getPassword(),input.get().getMemberPassword())){
+            String errorMessage = "잘못된 비밀번호 입니다.";
+            Map<String,String> errorMap = new HashMap<>();
+            errorMap.put("password",errorMessage);
+            throw new UserRequestException(errorMessage,errorMap);
+        }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
