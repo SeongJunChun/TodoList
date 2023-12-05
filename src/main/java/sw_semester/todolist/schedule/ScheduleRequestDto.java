@@ -1,9 +1,6 @@
-package sw_semester.todolist.Schedule;
+package sw_semester.todolist.schedule;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.*;
-import sw_semester.todolist.domain.Schedule;
-import sw_semester.todolist.domain.User;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package sw_semester.todolist.Schedule;
+package sw_semester.todolist.schedule;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;

@@ -1,10 +1,9 @@
 package sw_semester.todolist.domain;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sw_semester.todolist.Schedule.ScheduleRequestDto;
+import sw_semester.todolist.schedule.ScheduleRequestDto;
 
 import javax.persistence.*;
 import java.time.DayOfWeek;

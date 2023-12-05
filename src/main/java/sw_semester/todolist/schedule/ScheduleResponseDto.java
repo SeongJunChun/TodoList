@@ -1,9 +1,7 @@
-package sw_semester.todolist.Schedule;
+package sw_semester.todolist.schedule;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;

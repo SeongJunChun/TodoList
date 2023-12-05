@@ -1,8 +1,6 @@
-package sw_semester.todolist.Schedule;
+package sw_semester.todolist.schedule;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sw_semester.todolist.domain.User;
 

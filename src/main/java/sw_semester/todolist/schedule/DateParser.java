@@ -1,4 +1,4 @@
-package sw_semester.todolist.Schedule;
+package sw_semester.todolist.schedule;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
