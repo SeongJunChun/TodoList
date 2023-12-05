@@ -68,6 +68,9 @@ public class User implements UserDetails {
     @JoinColumn(nullable = true)
     private UserInfo userInfo;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Schedule> schedule;
+
 
 
     public void hasWroteArticle(){
