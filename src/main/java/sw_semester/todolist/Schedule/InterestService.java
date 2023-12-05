@@ -19,12 +19,4 @@ public class InterestService {
     public List<String> getAllInterests() {
         return interests;
     }
-
-    public void addInterest(String interest) {
-        interests.add(interest);
-    }
-
-    public void removeInterest(String interest) {
-        interests.remove(interest);
-    }
 }

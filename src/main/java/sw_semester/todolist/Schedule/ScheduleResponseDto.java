@@ -1,26 +1,32 @@
 package sw_semester.todolist.Schedule;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+@Data
+@NoArgsConstructor
 public class ScheduleResponseDto {
     private Long id;
     private LocalDate date;
     private  String headline;
     private  String context;
     private Boolean isDone;
+    private LocalTime time;
+    private Boolean isRepeat;
 
-    public ScheduleResponseDto(Long id, LocalDate date, String headline, String context, Boolean isDone) {
+    public ScheduleResponseDto(Long id, LocalDate date, String headline, String context, Boolean isDone, Boolean isRepeat, LocalTime time) {
         this.id = id;
         this.date = date;
         this.headline = headline;
         this.context = context;
         this.isDone = isDone;
-    }
-
-    public String getDateAsString() {
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return date.format(dateFormat);
+        this.isRepeat = isRepeat;
+        this.time = time;
     }
 
     public String getFormattedDate() {

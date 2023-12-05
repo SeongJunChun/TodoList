@@ -27,8 +27,9 @@ public class Schedule {
     @Column
     private LocalDate date;
 
-    @Column
-    private Long userId;
+    @JoinColumn
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User user;
 
     @Column
     private String headline;
@@ -58,11 +59,11 @@ public class Schedule {
     private String tags;
 
 
-    public Schedule(ScheduleRequestDto requestDto){
+    public Schedule(ScheduleRequestDto requestDto,User user){
         this.isDone = requestDto.getIsDone();
         this.context = requestDto.getContext();
         this.date = requestDto.getDate();
-        this.userId=requestDto.getUserId();
+        this.user=user;
         this.headline = requestDto.getHeadline();
         this.time=requestDto.getTime();
         this.isRepeat=requestDto.getIsRepeat();
