@@ -12,12 +12,9 @@ public class ArticleCreateRequestDto {
     @NotNull
     private String tag;
 
-    @NotNull
-    private String imageUrl;
 
-    public ArticleCreateRequestDto(String content, String imageUrl,String tag) {
+    public ArticleCreateRequestDto(String content, String tag) {
         this.content = content;
-        this.imageUrl = imageUrl;
         this.tag = tag;
     }
 }

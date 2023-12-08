@@ -3,9 +3,11 @@ package sw_semester.todolist.article;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sw_semester.todolist.repository.ArticleRepository;
 import sw_semester.todolist.domain.User;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -16,15 +18,22 @@ public class ArticleApiController {
     private final ArticleService articleService;
 
     @PostMapping("/api/articles")
-    public ArticleResponseDto createArticle(@RequestBody ArticleCreateRequestDto articleCreateRequestDto,  @AuthenticationPrincipal User user){
+    public ArticleResponseDto createArticle(@RequestPart("data") ArticleCreateRequestDto articleCreateRequestDto,
+                                            @AuthenticationPrincipal User user,
+                                            @RequestPart("image") MultipartFile multipartFile) throws IOException {
 
-        return articleService.createArticle(articleCreateRequestDto,user);
+        return articleService.createArticle(articleCreateRequestDto,user,multipartFile);
     }
 
     @GetMapping("/api/articles")
-    public List<ArticleResponseDto> readArticles(@AuthenticationPrincipal User user){
+    public List<ArticleResponseDto> readAllArticles(@AuthenticationPrincipal User user){
 
-        return articleService.readArticles(user);
+        return articleService.readAllArticles(user);
+    }
+    @GetMapping("/api/userArticles/{userId}")
+    public List<ArticleResponseDto> readArticles(@AuthenticationPrincipal User user,@PathVariable(name="userId") Long userId){
+
+        return articleService.readArticles(user,userId);
     }
 
     @GetMapping("/api/articles/search/{keyword}")

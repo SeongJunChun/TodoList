@@ -44,9 +44,9 @@ public class Article extends TimeStamped {
         this.content = articleUpdateRequestDto.getContent();
     }
 
-    public Article(ArticleCreateRequestDto articleCreateRequestDto, User user){
+    public Article(ArticleCreateRequestDto articleCreateRequestDto, User user,String postImg){
         this.content = articleCreateRequestDto.getContent();
-        this.imageUrl = articleCreateRequestDto.getImageUrl();
+        this.imageUrl = postImg;
         this.user = user;
         this.tag = articleCreateRequestDto.getTag();
     }

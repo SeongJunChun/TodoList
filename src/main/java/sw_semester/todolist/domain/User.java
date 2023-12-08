@@ -94,9 +94,9 @@ public class User implements UserDetails {
         this.userInfo.followCountMinus();
     }
 
-    public void update(ProfileUpdateRequestDto profileUpdateRequestDto){
+    public void update(ProfileUpdateRequestDto profileUpdateRequestDto,String image){
         this.memberName = profileUpdateRequestDto.getMemberName();
-        this.profileImageUrl = profileUpdateRequestDto.getProfileImageUrl();
+        this.profileImageUrl = image;
         this.selfIntroduction = profileUpdateRequestDto.getSelfIntroduction();
     }
 
