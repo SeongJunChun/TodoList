@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 public class ProfileUpdateRequestDto {
     @NotNull
     private String memberName;
-    private String profileImageUrl;
     private String selfIntroduction;
 
-    public ProfileUpdateRequestDto(String memberName, String profileImageUrl,String selfIntroduction){
+    public ProfileUpdateRequestDto(String memberName,String selfIntroduction){
         this.memberName = memberName;
-        this.profileImageUrl = profileImageUrl;
         this.selfIntroduction = selfIntroduction;
     }
 }
