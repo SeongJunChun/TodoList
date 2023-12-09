@@ -8,7 +8,9 @@ import sw_semester.todolist.article.ArticleUpdateRequestDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -26,8 +28,10 @@ public class Article extends TimeStamped {
     @Column(nullable = false)
     private String imageUrl;
 
-    @Column(nullable = false)
-    private String tag;
+
+    @ElementCollection
+    @CollectionTable(name = "article_tag", joinColumns = @JoinColumn(name = "article_id"))
+    private Set<String> tag;
 
 
     @ManyToOne(fetch = FetchType.EAGER)

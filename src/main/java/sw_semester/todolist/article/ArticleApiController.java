@@ -36,10 +36,9 @@ public class ArticleApiController {
         return articleService.readArticles(user,userId);
     }
 
-    @GetMapping("/api/articles/search/{keyword}")
-    public List<ArticleResponseDto> searchArticles(@PathVariable(name="keyword") String keyword, @AuthenticationPrincipal User user){
-
-        return articleService.searchArticles(keyword,user);
+    @GetMapping("/api/articles/search")
+    public List<ArticleResponseDto> searchArticles(@RequestParam(name="keyword") String keyword, @AuthenticationPrincipal User user) {
+        return articleService.searchArticles(keyword, user);
     }
 
     @GetMapping("/api/articles/{articleId}")
@@ -50,13 +49,13 @@ public class ArticleApiController {
 
     //사진 수정 안됨 내수정만
     @PutMapping("/api/articles/{articleId}")
-    public ArticleResponseDto updateArticle(@PathVariable Long articleId, @RequestBody ArticleUpdateRequestDto articleUpdateRequestDto , @AuthenticationPrincipal User user){
+    public boolean updateArticle(@PathVariable Long articleId, @RequestBody ArticleUpdateRequestDto articleUpdateRequestDto , @AuthenticationPrincipal User user){
         return articleService.updateArticle(articleId, articleUpdateRequestDto,user);
     }
 
 
     @DeleteMapping("/api/articles/{articleId}")
-    public void deleteArticle(@PathVariable Long articleId , @AuthenticationPrincipal User user){
-        articleService.deleteArticle(articleId,user);
+    public boolean deleteArticle(@PathVariable Long articleId , @AuthenticationPrincipal User user){
+        return articleService.deleteArticle(articleId,user);
     }
 }

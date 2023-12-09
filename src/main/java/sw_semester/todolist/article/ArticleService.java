@@ -144,7 +144,7 @@ public class ArticleService {
             }
         }
     public List<ArticleResponseDto> searchArticles(String keyword,User user) {
-        List<Article> articles = articleRepository.findAllByContentContainingOrTagContaining(keyword,keyword);
+        List<Article> articles = articleRepository.findAllByTag(keyword);
 
         if (user == null) { // 로그인 하지 않은 사용자
             List<ArticleResponseDto> articleResponseDtoList = new ArrayList<>();
@@ -179,7 +179,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponseDto updateArticle(Long articleId, ArticleUpdateRequestDto articleUpdateRequestDto, User user) {
+    public boolean updateArticle(Long articleId, ArticleUpdateRequestDto articleUpdateRequestDto, User user) {
         Optional<Article> article = articleRepository.findById(articleId);
         Optional<User> contextUser = userRepository.findById(user.getId());
 
@@ -193,19 +193,19 @@ public class ArticleService {
                         break;
                     }
                 }
-                return new ArticleResponseDto(article.get(), isLiked);
+                return true;
             } else {
-                throw new IllegalArgumentException("로그인 한 사용자와 게시물 작성자가 다릅니다.");
+                return false;
             }
         } else {
-            throw new IllegalArgumentException("해당 게시글이 없습니다. id=" + articleId);
+            return false;
         }
 
 
     }
 
     @Transactional
-    public void deleteArticle(Long articleId, User user) {
+    public boolean deleteArticle(Long articleId, User user) {
         Optional<Article> article = articleRepository.findById(articleId);
         Optional<User> contextUser = userRepository.findById(user.getId());
         if (article.isPresent()) {
@@ -214,11 +214,12 @@ public class ArticleService {
                 articleRepository.delete(article.get());
 
                 contextUser.get().hasDeletedArticle();
+                return true;
             } else {
-                throw new IllegalArgumentException("로그인 한 사용자와 게시물 작성자가 다릅니다.");
+                return false;
             }
         } else {
-            throw new IllegalArgumentException("해당 게시글이 없습니다. id=" + articleId);
+            return false;
         }
     }
 

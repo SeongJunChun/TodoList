@@ -54,34 +54,34 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateComment(Long articleId, Long commentId, CommentUpdateRequestDto commentUpdateRequestDto, User user) {
+    public boolean updateComment(Long articleId, Long commentId, CommentUpdateRequestDto commentUpdateRequestDto, User user) {
 
         Optional<Comment> comment = commentRepository.findById(commentId);
 
         if (comment.isPresent()) {
             if (comment.get().getUser().getId().equals(user.getId())) {
                 comment.get().update(commentUpdateRequestDto);
+                return true;
             } else {
-                throw new IllegalArgumentException("로그인 한 사용자와 댓글 작성자가 다릅니다.");
+                return false;
             }
         } else {
-            throw new IllegalArgumentException("해당 댓글이 없습니다. id=" + commentId);
+            return false;
         }
-
-        return new CommentResponseDto(comment.get());
     }
 
-    public void deleteComment(Long articleId, Long commentId, User user) {
+    public boolean deleteComment(Long articleId, Long commentId, User user) {
         Optional<Comment> comment = commentRepository.findById(commentId);
 
         if (comment.isPresent()) {
             if (comment.get().getUser().getId().equals(user.getId())) {
                 commentRepository.delete(comment.get());
+                return true;
             } else {
-                throw new IllegalArgumentException("로그인 한 사용자와 댓글 작성자가 다릅니다.");
+                return false;
             }
         } else {
-            throw new IllegalArgumentException("해당 댓글이 없습니다. id=" + commentId);
+            return false;
         }
     }
 }

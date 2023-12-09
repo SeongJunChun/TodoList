@@ -29,6 +29,7 @@ public class MyInfoService {
                 .articleCount(contextUser.getUserInfo().getArticleCount())
                 .followerCount(contextUser.getUserInfo().getFollowerCount())
                 .followCount(contextUser.getUserInfo().getFollowCount())
+                .memberId(contextUser.getId())
                 .build();
     }
     @Transactional
@@ -62,7 +63,8 @@ public class MyInfoService {
                     user.getSelfIntroduction(),
                     user.getUserInfo().getArticleCount(),
                     user.getUserInfo().getFollowerCount(),
-                    user.getUserInfo().getFollowCount()));
+                    user.getUserInfo().getFollowCount(),
+                    user.getId()));
         }
         return infoList;
     }
@@ -76,6 +78,7 @@ public class MyInfoService {
                 .articleCount(contextUser.getUserInfo().getArticleCount())
                 .followerCount(contextUser.getUserInfo().getFollowerCount())
                 .followCount(contextUser.getUserInfo().getFollowCount())
+                .memberId(contextUser.getId())
                 .build();
     }
 
