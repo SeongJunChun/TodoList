@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import sw_semester.todolist.domain.Article;
 import sw_semester.todolist.domain.Liked;
 import sw_semester.todolist.domain.User;
+import sw_semester.todolist.domain.UserInfo;
 import sw_semester.todolist.repository.ArticleRepository;
 import sw_semester.todolist.repository.LikedRepository;
 import sw_semester.todolist.repository.MemberRepository;
@@ -17,9 +18,7 @@ import sw_semester.todolist.util.S3Upload;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -143,8 +142,9 @@ public class ArticleService {
                 }
             }
         }
-    public List<ArticleResponseDto> searchArticles(String keyword,User user) {
-        List<Article> articles = articleRepository.findAllByTag(keyword);
+    public List<ArticleResponseDto> searchArticles(Set<String> tags,String method,User user) {
+        //List<Article> articles = articleRepository.findAllByTagIn(tags);
+        Set<Article> articles = new HashSet<>(articleRepository.findAllByTagIn(tags));
 
         if (user == null) { // 로그인 하지 않은 사용자
             List<ArticleResponseDto> articleResponseDtoList = new ArrayList<>();
@@ -153,7 +153,7 @@ public class ArticleService {
                 articleResponseDtoList.add(new ArticleResponseDto(article, false));
             }
 
-            return articleResponseDtoList;
+            return sortResponse(articleResponseDtoList,method);
         } else {
             Optional<User> contextUser = userRepository.findById(user.getId());
             List<ArticleResponseDto> articleResponseDtoList = new ArrayList<>();
@@ -174,9 +174,23 @@ public class ArticleService {
                 articleResponseDtoList.add(new ArticleResponseDto(article, isLike));
             }
 
-            return articleResponseDtoList;
+            return sortResponse(articleResponseDtoList,method);
         }
     }
+    public List<ArticleResponseDto> sortResponse(List<ArticleResponseDto> articleResponseDtoList, String method) {
+        List<ArticleResponseDto> sortedList = new ArrayList<>(articleResponseDtoList);
+
+        if (method.equals("추천순")) {
+            Collections.sort(sortedList, Comparator.comparingLong(ArticleResponseDto::getLikeCount).reversed());
+        } else if (method.equals("팔로워순")) {
+            Collections.sort(sortedList, Comparator.comparingLong((ArticleResponseDto articleResponseDto) -> {
+                UserInfo userInfo = userRepository.findById(articleResponseDto.getAuthorId()).get().getUserInfo();
+                return userInfo.getFollowerCount();
+            }).reversed());
+        }
+        return sortedList;
+    }
+
 
     @Transactional
     public boolean updateArticle(Long articleId, ArticleUpdateRequestDto articleUpdateRequestDto, User user) {

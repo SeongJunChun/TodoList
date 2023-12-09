@@ -9,6 +9,7 @@ import sw_semester.todolist.domain.User;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,8 +38,8 @@ public class ArticleApiController {
     }
 
     @GetMapping("/api/articles/search")
-    public List<ArticleResponseDto> searchArticles(@RequestParam(name="keyword") String keyword, @AuthenticationPrincipal User user) {
-        return articleService.searchArticles(keyword, user);
+    public List<ArticleResponseDto> searchArticles(@RequestParam(name="keyword") Set<String> keyword, @RequestParam(name="method") String method, @AuthenticationPrincipal User user) {
+        return articleService.searchArticles(keyword,method,user);
     }
 
     @GetMapping("/api/articles/{articleId}")
