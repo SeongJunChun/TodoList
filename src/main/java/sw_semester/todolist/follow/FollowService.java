@@ -54,9 +54,9 @@ public class FollowService {
             throw new FollowRequestException("해당 유저가 없습니다. userId=" + userId);
         }
     }
-    public List<FollowResponseDto> getFollowers(User user){
+    public List<FollowResponseDto> getFollowers(Long id){
         List<FollowResponseDto> followResponseDtos = new ArrayList<>();
-        List<Follow> followers = followRepository.findAllByFollowerId(user.getId());
+        List<Follow> followers = followRepository.findAllByFollowerId(id);
         for(Follow user1 : followers){
             User user1Follower = user1.getFollowee();
             FollowResponseDto dto = new FollowResponseDto(user1Follower.getProfileImageUrl(), user1Follower.getMemberName(), user1Follower.getId());
@@ -64,9 +64,9 @@ public class FollowService {
         }
         return followResponseDtos;
     }
-    public List<FollowResponseDto> getFollowees(User user){
+    public List<FollowResponseDto> getFollowees(Long id){
         List<FollowResponseDto> followResponseDtos = new ArrayList<>();
-        List<Follow> followers = followRepository.findAllByFolloweeId(user.getId());
+        List<Follow> followers = followRepository.findAllByFolloweeId(id);
         for(Follow user1 : followers){
             User user1Follower = user1.getFollower();
             FollowResponseDto dto = new FollowResponseDto(user1Follower.getProfileImageUrl(), user1Follower.getMemberName(), user1Follower.getId());

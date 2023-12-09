@@ -20,12 +20,12 @@ public class FollowController {
         }
         return followService.toggleUser(userId, user);
     }
-    @GetMapping("/api/follower")
-    public List<FollowResponseDto> getFollower(@AuthenticationPrincipal User user){
+    @GetMapping("/api/follower/{userId}")
+    public List<FollowResponseDto> getFollower(@PathVariable(name="userId") Long user){
         return followService.getFollowers(user);
     }
-    @GetMapping("/api/followee")
-    public List<FollowResponseDto> getFollowee(@AuthenticationPrincipal User user){
+    @GetMapping("/api/followee/{userId}")
+    public List<FollowResponseDto> getFollowee(@PathVariable(name="userId") Long user){
         return followService.getFollowees(user);
     }
 }
