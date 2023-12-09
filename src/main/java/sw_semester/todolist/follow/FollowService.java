@@ -9,6 +9,8 @@ import sw_semester.todolist.repository.MemberRepository;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -51,5 +53,25 @@ public class FollowService {
         } else {
             throw new FollowRequestException("해당 유저가 없습니다. userId=" + userId);
         }
+    }
+    public List<FollowResponseDto> getFollowers(User user){
+        List<FollowResponseDto> followResponseDtos = new ArrayList<>();
+        List<Follow> followers = followRepository.findAllByFollowerId(user.getId());
+        for(Follow user1 : followers){
+            User user1Follower = user1.getFollowee();
+            FollowResponseDto dto = new FollowResponseDto(user1Follower.getProfileImageUrl(), user1Follower.getMemberName(), user1Follower.getId());
+            followResponseDtos.add(dto);
+        }
+        return followResponseDtos;
+    }
+    public List<FollowResponseDto> getFollowees(User user){
+        List<FollowResponseDto> followResponseDtos = new ArrayList<>();
+        List<Follow> followers = followRepository.findAllByFolloweeId(user.getId());
+        for(Follow user1 : followers){
+            User user1Follower = user1.getFollower();
+            FollowResponseDto dto = new FollowResponseDto(user1Follower.getProfileImageUrl(), user1Follower.getMemberName(), user1Follower.getId());
+            followResponseDtos.add(dto);
+        }
+        return followResponseDtos;
     }
 }

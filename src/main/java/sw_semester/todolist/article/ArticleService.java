@@ -2,15 +2,21 @@ package sw_semester.todolist.article;
 
 import lombok.RequiredArgsConstructor;
 
+import java.io.File;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import sw_semester.todolist.domain.Article;
 import sw_semester.todolist.domain.Liked;
 import sw_semester.todolist.domain.User;
 import sw_semester.todolist.repository.ArticleRepository;
 import sw_semester.todolist.repository.LikedRepository;
 import sw_semester.todolist.repository.MemberRepository;
+import sw_semester.todolist.util.S3Upload;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,10 +27,12 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final MemberRepository userRepository;
     private final LikedRepository likedRepository;
+    private final S3Upload s3Uploader;
 
     @Transactional
-    public ArticleResponseDto createArticle(ArticleCreateRequestDto articleCreateRequestDto, User user) {
-        Article article = new Article(articleCreateRequestDto, user);
+    public ArticleResponseDto createArticle(ArticleCreateRequestDto articleCreateRequestDto, User user, MultipartFile image) throws IOException {
+        String postImg = s3Uploader.upload(image, "images");
+        Article article = new Article(articleCreateRequestDto, user,postImg);
         articleRepository.save(article);
         //contextUser = 실제 해당 User를 영속성 컨텍스트에 올림.
         Optional<User> contextUser = userRepository.findById(user.getId());
@@ -32,7 +40,7 @@ public class ArticleService {
         return new ArticleResponseDto(article, false);
     }
 
-    public List<ArticleResponseDto> readArticles(User user) {
+    public List<ArticleResponseDto> readAllArticles(User user) {
         List<Article> articles = articleRepository.findAllByOrderByCreatedAtDesc();
 
         if (user == null) { // 로그인 하지 않은 사용자
@@ -66,6 +74,41 @@ public class ArticleService {
             return articleResponseDtoList;
         }
     }
+    public List<ArticleResponseDto> readArticles(User user,Long userId) {
+        List<Article> articles = articleRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
+
+        if (user == null) { // 로그인 하지 않은 사용자
+            List<ArticleResponseDto> articleResponseDtoList = new ArrayList<>();
+
+            for (Article article : articles) {
+                articleResponseDtoList.add(new ArticleResponseDto(article, false));
+            }
+
+            return articleResponseDtoList;
+        } else {
+            Optional<User> contextUser = userRepository.findById(user.getId());
+            List<ArticleResponseDto> articleResponseDtoList = new ArrayList<>();
+
+            if (!contextUser.isPresent()) {
+                throw new IllegalArgumentException("뭔가...문제가 있음...");
+            }
+
+            boolean isLike;
+            for (Article article : articles) {
+                isLike = false;
+                for (Liked liked : contextUser.get().getLikedList()) {
+                    if (liked.getArticle().getId().equals(article.getId())) {
+                        isLike = true;
+                        break;
+                    }
+                }
+                articleResponseDtoList.add(new ArticleResponseDto(article, isLike));
+            }
+
+            return articleResponseDtoList;
+        }
+    }
+
 
         public ArticleResponseDto readArticle(Long articleId, User user) {
             Optional<Article> article = articleRepository.findById(articleId);
@@ -101,7 +144,7 @@ public class ArticleService {
             }
         }
     public List<ArticleResponseDto> searchArticles(String keyword,User user) {
-        List<Article> articles = articleRepository.findAllByContentContainingOrTagContaining(keyword,keyword);
+        List<Article> articles = articleRepository.findAllByTag(keyword);
 
         if (user == null) { // 로그인 하지 않은 사용자
             List<ArticleResponseDto> articleResponseDtoList = new ArrayList<>();
@@ -136,7 +179,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponseDto updateArticle(Long articleId, ArticleUpdateRequestDto articleUpdateRequestDto, User user) {
+    public boolean updateArticle(Long articleId, ArticleUpdateRequestDto articleUpdateRequestDto, User user) {
         Optional<Article> article = articleRepository.findById(articleId);
         Optional<User> contextUser = userRepository.findById(user.getId());
 
@@ -150,30 +193,34 @@ public class ArticleService {
                         break;
                     }
                 }
-                return new ArticleResponseDto(article.get(), isLiked);
+                return true;
             } else {
-                throw new IllegalArgumentException("로그인 한 사용자와 게시물 작성자가 다릅니다.");
+                return false;
             }
         } else {
-            throw new IllegalArgumentException("해당 게시글이 없습니다. id=" + articleId);
+            return false;
         }
 
 
     }
 
     @Transactional
-    public void deleteArticle(Long articleId, User user) {
+    public boolean deleteArticle(Long articleId, User user) {
         Optional<Article> article = articleRepository.findById(articleId);
         Optional<User> contextUser = userRepository.findById(user.getId());
         if (article.isPresent()) {
             if (article.get().getUser().getId().equals(user.getId())) {
+                s3Uploader.fileDelete(article.get().getImageUrl());
                 articleRepository.delete(article.get());
+
                 contextUser.get().hasDeletedArticle();
+                return true;
             } else {
-                throw new IllegalArgumentException("로그인 한 사용자와 게시물 작성자가 다릅니다.");
+                return false;
             }
         } else {
-            throw new IllegalArgumentException("해당 게시글이 없습니다. id=" + articleId);
+            return false;
         }
     }
+
 }

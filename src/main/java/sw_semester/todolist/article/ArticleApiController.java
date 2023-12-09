@@ -3,9 +3,11 @@ package sw_semester.todolist.article;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sw_semester.todolist.repository.ArticleRepository;
 import sw_semester.todolist.domain.User;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -16,21 +18,27 @@ public class ArticleApiController {
     private final ArticleService articleService;
 
     @PostMapping("/api/articles")
-    public ArticleResponseDto createArticle(@RequestBody ArticleCreateRequestDto articleCreateRequestDto,  @AuthenticationPrincipal User user){
+    public ArticleResponseDto createArticle(@RequestPart("data") ArticleCreateRequestDto articleCreateRequestDto,
+                                            @AuthenticationPrincipal User user,
+                                            @RequestPart("image") MultipartFile multipartFile) throws IOException {
 
-        return articleService.createArticle(articleCreateRequestDto,user);
+        return articleService.createArticle(articleCreateRequestDto,user,multipartFile);
     }
 
     @GetMapping("/api/articles")
-    public List<ArticleResponseDto> readArticles(@AuthenticationPrincipal User user){
+    public List<ArticleResponseDto> readAllArticles(@AuthenticationPrincipal User user){
 
-        return articleService.readArticles(user);
+        return articleService.readAllArticles(user);
+    }
+    @GetMapping("/api/userArticles/{userId}")
+    public List<ArticleResponseDto> readArticles(@AuthenticationPrincipal User user,@PathVariable(name="userId") Long userId){
+
+        return articleService.readArticles(user,userId);
     }
 
-    @GetMapping("/api/articles/search/{keyword}")
-    public List<ArticleResponseDto> searchArticles(@PathVariable(name="keyword") String keyword, @AuthenticationPrincipal User user){
-
-        return articleService.searchArticles(keyword,user);
+    @GetMapping("/api/articles/search")
+    public List<ArticleResponseDto> searchArticles(@RequestParam(name="keyword") String keyword, @AuthenticationPrincipal User user) {
+        return articleService.searchArticles(keyword, user);
     }
 
     @GetMapping("/api/articles/{articleId}")
@@ -41,13 +49,13 @@ public class ArticleApiController {
 
     //사진 수정 안됨 내수정만
     @PutMapping("/api/articles/{articleId}")
-    public ArticleResponseDto updateArticle(@PathVariable Long articleId, @RequestBody ArticleUpdateRequestDto articleUpdateRequestDto , @AuthenticationPrincipal User user){
+    public boolean updateArticle(@PathVariable Long articleId, @RequestBody ArticleUpdateRequestDto articleUpdateRequestDto , @AuthenticationPrincipal User user){
         return articleService.updateArticle(articleId, articleUpdateRequestDto,user);
     }
 
 
     @DeleteMapping("/api/articles/{articleId}")
-    public void deleteArticle(@PathVariable Long articleId , @AuthenticationPrincipal User user){
-        articleService.deleteArticle(articleId,user);
+    public boolean deleteArticle(@PathVariable Long articleId , @AuthenticationPrincipal User user){
+        return articleService.deleteArticle(articleId,user);
     }
 }

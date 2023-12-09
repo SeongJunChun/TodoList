@@ -24,14 +24,12 @@ public class CommentApiController {
 
 
     @PutMapping("/api/articles/{articleId}/comments/{commentId}")
-    public List<CommentResponseDto> updateComment(@PathVariable Long articleId, @PathVariable Long commentId,  @RequestBody CommentUpdateRequestDto commentUpdateRequestDto,  @AuthenticationPrincipal User user){
-        commentService.updateComment(articleId, commentId, commentUpdateRequestDto, user);
-        return commentService.getAllComments(articleId);
+    public boolean updateComment(@PathVariable Long articleId, @PathVariable Long commentId,  @RequestBody CommentUpdateRequestDto commentUpdateRequestDto,  @AuthenticationPrincipal User user){
+        return commentService.updateComment(articleId, commentId, commentUpdateRequestDto, user);
     }
 
     @DeleteMapping("/api/articles/{articleId}/comments/{commentId}")
-    public List<CommentResponseDto> deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, @AuthenticationPrincipal User user){
-        commentService.deleteComment(articleId, commentId, user);
-        return commentService.getAllComments(articleId);
+    public boolean deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, @AuthenticationPrincipal User user){
+        return commentService.deleteComment(articleId, commentId, user);
     }
 }
