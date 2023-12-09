@@ -12,5 +12,5 @@ import java.util.Set;
 public interface ScheduleRepository extends JpaRepository<Schedule,Long> {
     List<Schedule> findByDate(LocalDate date);
     List<Schedule> findByInterestsIn(Set<String> interests);
-    List<Schedule> findByTagsContaining(String tags);
+    List<Schedule> findByTagsIn(Set<String> tags);
 }
