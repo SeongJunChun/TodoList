@@ -39,7 +39,15 @@ public class ScheduleController {
                     .map(schedule -> {
                         Map<String, Object> scheduleInfo = new HashMap<>();
                         scheduleInfo.put("headline", schedule.getHeadline());
+                        scheduleInfo.put("context",schedule.getContext());
+                        scheduleInfo.put("time",schedule.getTime());
+                        scheduleInfo.put("isRepeat",schedule.getIsRepeat());
+                        scheduleInfo.put("repeatDay",schedule.getDaysOfWeek());
+                        scheduleInfo.put("repeatEnd",schedule.getRepeatEndDate());
+                        scheduleInfo.put("interest",schedule.getInterests());
+                        scheduleInfo.put("tag",schedule.getTags());
                         scheduleInfo.put("isDone", schedule.getIsDone());
+                        scheduleInfo.put("scheduleId",schedule.getId());
                         return scheduleInfo;
                     })
                     .collect(Collectors.toList());
@@ -62,8 +70,13 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteSchedule(@PathVariable("id") Long id) {
-        scheduleService.delete(id);
+    public ResponseEntity<String> deleteSchedule(@PathVariable("id") Long id, @AuthenticationPrincipal User use) {
+        try {
+            scheduleService.delete(id);
+            return ResponseEntity.ok("Schedule deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting schedule");
+        }
     }
 
     @GetMapping("/findByInterests")
@@ -76,7 +89,9 @@ public class ScheduleController {
                     .map(schedule -> {
                         Map<String, Object> scheduleInfo = new HashMap<>();
                         scheduleInfo.put("headline", schedule.getHeadline());
-                        scheduleInfo.put("user", schedule.getUser().getUsername());
+                        scheduleInfo.put("username", schedule.getUser().getUsername());
+                        scheduleInfo.put("profile",schedule.getUser().getProfileImageUrl());
+                        scheduleInfo.put("userId",schedule.getUser().getId());
                         return scheduleInfo;
                     })
                     .collect(Collectors.toList());
@@ -88,7 +103,7 @@ public class ScheduleController {
 
 
     @GetMapping("/findByTags")
-    public Map<String, Object> getScheduleByTags(@RequestParam(name = "tags") String tags) {
+    public Map<String, Object> getScheduleByTags(@RequestParam(name = "tags") Set<String> tags) {
         List<Schedule> schedules = scheduleService.findByTags(tags);
         Map<String, Object> response = new HashMap<>();
 
@@ -100,6 +115,8 @@ public class ScheduleController {
                         Map<String, Object> scheduleInfo = new HashMap<>();
                         scheduleInfo.put("headline", schedule.getHeadline());
                         scheduleInfo.put("user", schedule.getUser().getUsername());
+                        scheduleInfo.put("profile",schedule.getUser().getProfileImageUrl());
+                        scheduleInfo.put("userId",schedule.getUser().getId());
                         return scheduleInfo;
                     })
                     .collect(Collectors.toList());
@@ -108,5 +125,29 @@ public class ScheduleController {
         }
         return response;
     }
+
+    @GetMapping("/findAllSchedules")
+    public Map<String, Object> getAllSchedules() {
+        List<Schedule> schedules = scheduleService.getAllSchedules();
+        Map<String, Object> response = new HashMap<>();
+
+        if (!schedules.isEmpty()) {
+            List<Map<String, Object>> scheduleInfoList = schedules.stream()
+                    .map(schedule -> {
+                        Map<String, Object> scheduleInfo = new HashMap<>();
+                        scheduleInfo.put("headline", schedule.getHeadline());
+                        scheduleInfo.put("username", schedule.getUser().getUsername());
+                        scheduleInfo.put("profile", schedule.getUser().getProfileImageUrl());
+                        scheduleInfo.put("userId", schedule.getUser().getId());
+                        return scheduleInfo;
+                    })
+                    .collect(Collectors.toList());
+
+            response.put("schedules", scheduleInfoList);
+        }
+        return response;
+    }
+
+
 
 }

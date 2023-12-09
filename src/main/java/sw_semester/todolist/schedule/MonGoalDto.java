@@ -9,11 +9,13 @@ import sw_semester.todolist.domain.MonGoal;
 @Data
 @NoArgsConstructor
 public class MonGoalDto {
+    private Long id;
     private Long year;
     private Long month;
     private String monGoal;
 
-    public MonGoalDto (Long year, Long month, String monGoal){
+    public MonGoalDto (Long id, Long year, Long month, String monGoal){
+        this.id=id;
         this.monGoal=monGoal;
         this.month=month;
         this.year=year;

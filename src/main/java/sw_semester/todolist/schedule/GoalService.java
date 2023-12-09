@@ -47,7 +47,7 @@ public class GoalService {
 
         yearGoal.setYearGoal(updatedYearGoal);
 
-        return new YearGoalDto(yearGoal.getYear(), yearGoal.getYearGoal());
+        return new YearGoalDto(yearGoal.getId(),yearGoal.getYear(), yearGoal.getYearGoal());
     }
 
     @Transactional
@@ -57,7 +57,7 @@ public class GoalService {
 
         monGoal.setMonGoal(updatedMonGoal);
 
-        return new MonGoalDto(monGoal.getYear(), monGoal.getMonth(), monGoal.getMonGoal());
+        return new MonGoalDto(monGoal.getId(),monGoal.getYear(), monGoal.getMonth(), monGoal.getMonGoal());
     }
 
 
@@ -72,16 +72,16 @@ public class GoalService {
     }
 
     @Transactional
-    public void deleteYearGoal(Long id, User user) {
-        YearGoal yearGoal = yearGoalRepository.findByIdAndUser(id, user)
+    public void deleteYearGoal(Long id) {
+        YearGoal yearGoal = yearGoalRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 연간 목표를 찾을 수 없습니다."));
 
         yearGoalRepository.delete(yearGoal);
     }
 
     @Transactional
-    public void deleteMonGoal(Long id, User user) {
-        MonGoal monGoal = monGoalRepository.findByIdAndUser(id, user)
+    public void deleteMonGoal(Long id) {
+        MonGoal monGoal = monGoalRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 월간 목표를 찾을 수 없습니다."));
 
         monGoalRepository.delete(monGoal);

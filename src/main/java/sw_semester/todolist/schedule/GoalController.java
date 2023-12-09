@@ -63,25 +63,39 @@ public class GoalController {
     }
     private List<YearGoalDto> convertToYearGoalDtoList(List<YearGoal> yearGoals) {
         return yearGoals.stream()
-                .map(yearGoal -> new YearGoalDto(yearGoal.getYear(), yearGoal.getYearGoal()))
+                .map(yearGoal -> {
+                    YearGoalDto dto = new YearGoalDto();
+                    dto.setId(yearGoal.getId());
+                    dto.setYear(yearGoal.getYear());
+                    dto.setYearGoal(yearGoal.getYearGoal());
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
     private List<MonGoalDto> convertToMonGoalDtoList(List<MonGoal> monthGoals) {
         return monthGoals.stream()
-                .map(monGoal -> new MonGoalDto(monGoal.getYear(), monGoal.getMonth(), monGoal.getMonGoal()))
+                .map(monGoal -> {
+                    MonGoalDto dto = new MonGoalDto();
+                    dto.setId(monGoal.getId());
+                    dto.setYear(monGoal.getYear());
+                    dto.setMonth(monGoal.getMonth());
+                    dto.setMonGoal(monGoal.getMonGoal());
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
+
     @DeleteMapping("/deleteYearGoal/{id}")
     public ResponseEntity<String> deleteYearGoal(@PathVariable Long id, @AuthenticationPrincipal User user) {
-        goalService.deleteYearGoal(id, user);
+        goalService.deleteYearGoal(id);
         return ResponseEntity.ok("YearGoal deleted successfully");
     }
 
     @DeleteMapping("/deleteMonGoal/{id}")
     public ResponseEntity<String> deleteMonGoal(@PathVariable Long id, @AuthenticationPrincipal User user) {
-        goalService.deleteMonGoal(id, user);
+        goalService.deleteMonGoal(id);
         return ResponseEntity.ok("MonGoal deleted successfully");
     }
 }

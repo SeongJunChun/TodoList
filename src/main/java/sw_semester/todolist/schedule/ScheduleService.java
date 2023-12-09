@@ -23,7 +23,7 @@ public class ScheduleService {
     @Autowired
     private InterestService interestService;
 
-
+    @Transactional
     public List<Schedule> findByDate(LocalDate date) {
         return scheduleRepository.findByDate(date);
     }
@@ -122,9 +122,12 @@ public class ScheduleService {
     }
 
     @Transactional
-    public List<Schedule> findByTags(String tags) {
-        return scheduleRepository.findByTagsContaining(tags);
-
+    public List<Schedule> findByTags(Set<String> tags) {
+        return scheduleRepository.findByTagsIn(tags);
     }
 
+    @Transactional
+    public List<Schedule> getAllSchedules() {
+        return scheduleRepository.findAll();
+    }
 }
