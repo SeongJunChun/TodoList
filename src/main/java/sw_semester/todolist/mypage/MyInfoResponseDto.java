@@ -17,5 +17,6 @@ public class MyInfoResponseDto {
     private Long followerCount;
     private Long followCount;
     private Long memberId;
+    private boolean isFollowUser;
 
 }

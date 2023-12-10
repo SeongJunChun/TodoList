@@ -51,7 +51,6 @@ public class AuthService {
                 .memberName(request.getName())
                 .memberEmail(request.getEmail())
                 .selfIntroduction("자기소개를 작성하세요")
-                .profileImageUrl("https://todoserver.s3.ap-northeast-2.amazonaws.com/static/%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84.jpg")
                 .memberPassword(passwordEncoder.encode(request.getPassword()))
                 .userInfo(userInfo)
                 .role(Role.USER)

@@ -3,9 +3,11 @@ package sw_semester.todolist.mypage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import sw_semester.todolist.domain.Follow;
 import sw_semester.todolist.domain.User;
 import sw_semester.todolist.follow.FollowRequestException;
 import sw_semester.todolist.loginpackage.exception.UserRequestException;
+import sw_semester.todolist.repository.FollowRepository;
 import sw_semester.todolist.repository.MemberRepository;
 import sw_semester.todolist.repository.UserInfoRepository;
 import sw_semester.todolist.util.S3Upload;
@@ -18,6 +20,7 @@ import java.util.*;
 @Service
 public class MyInfoService {
     private final MemberRepository memberRepository;
+    private final FollowRepository followRepository;
     private final S3Upload s3Uploader;
     public MyInfoResponseDto readMyInfo(User user){
         User contextUser = memberRepository.findByMemberEmail(user.getMemberEmail()).get();
@@ -53,23 +56,18 @@ public class MyInfoService {
         }
         return new ProfileUpdateResponseDto(found.get());
     }
-    public List<MyInfoResponseDto> searchMyInfo(String keyword){
+    public List<MyInfoResponseDto> searchMyInfo(String keyword, User me){
         List<User> users = memberRepository.findAllByMemberNameContaining(keyword);
         List<MyInfoResponseDto> infoList = new ArrayList<>();
         for (User user : users){
-            infoList.add(new MyInfoResponseDto(
-                    user.getProfileImageUrl(),
-                    user.getMemberName(),
-                    user.getSelfIntroduction(),
-                    user.getUserInfo().getArticleCount(),
-                    user.getUserInfo().getFollowerCount(),
-                    user.getUserInfo().getFollowCount(),
-                    user.getId()));
+            infoList.add(getUserInfo(user.getId(), me));
         }
         return infoList;
     }
-    public MyInfoResponseDto getUserInfo(Long userId){
+    public MyInfoResponseDto getUserInfo(Long userId,User user){
         User contextUser  = memberRepository.findById(userId).get();
+        boolean isFollow = contextUser.getFolloweeList().stream()
+                .anyMatch(follow -> follow.getFollower().getId().equals(user.getId()));
 
         return MyInfoResponseDto.builder()
                 .myProfileImageUrl(contextUser.getProfileImageUrl())
@@ -79,6 +77,7 @@ public class MyInfoService {
                 .followerCount(contextUser.getUserInfo().getFollowerCount())
                 .followCount(contextUser.getUserInfo().getFollowCount())
                 .memberId(contextUser.getId())
+                .isFollowUser(isFollow)
                 .build();
     }
 

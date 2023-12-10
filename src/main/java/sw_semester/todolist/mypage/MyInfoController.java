@@ -34,12 +34,13 @@ public class MyInfoController {
         return myInfoService.updateProfile(profileUpdateRequestDto, user,multipartFile);
     }
     @GetMapping("/api/myinfo/{searchKeyword}")
-    public List<MyInfoResponseDto> searchMyInfo(@PathVariable(name="searchKeyword") String keyword){
-        return myInfoService.searchMyInfo(keyword);
+    public List<MyInfoResponseDto> searchMyInfo(@PathVariable(name="searchKeyword") String keyword,
+                                                @AuthenticationPrincipal User user){
+        return myInfoService.searchMyInfo(keyword,user);
     }
     @GetMapping("/api/userinfo/{Id}")
-    public MyInfoResponseDto getUser(@PathVariable(name="Id") Long UserId){
-        return myInfoService.getUserInfo(UserId);
+    public MyInfoResponseDto getUser(@PathVariable(name="Id") Long UserId,@AuthenticationPrincipal User user){
+        return myInfoService.getUserInfo(UserId,user);
     }
 
 }
