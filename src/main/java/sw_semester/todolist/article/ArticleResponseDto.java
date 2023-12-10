@@ -6,9 +6,7 @@ import sw_semester.todolist.domain.Article;
 import sw_semester.todolist.domain.Comment;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 public class ArticleResponseDto {
@@ -36,7 +34,7 @@ public class ArticleResponseDto {
         this.modifiedAt = article.getModifiedAt();
         this.imageUrl = article.getImageUrl();
         this.content = article.getContent();
-        this.tag = article.getTag();
+        this.tag = convertStringToTagSet(article.getTag());
         this.author = article.getUser().getMemberName();
         this.authorId=article.getUser().getId();
         this.authorProfileImageUrl = article.getUser().getProfileImageUrl();
@@ -46,5 +44,18 @@ public class ArticleResponseDto {
         for(Comment comment:article.getCommentList()){
             this.comments.add(new CommentResponseDto(comment));
         }
+    }
+    public static Set<String> convertStringToTagSet(String tagString) {
+        Set<String> tagSet = new HashSet<>();
+
+        if (tagString != null && !tagString.isEmpty()) {
+            // Split the string by commas and trim whitespace
+            String[] tagsArray = tagString.split(",");
+            for (String tag : tagsArray) {
+                tagSet.add(tag.trim());
+            }
+        }
+
+        return tagSet;
     }
 }

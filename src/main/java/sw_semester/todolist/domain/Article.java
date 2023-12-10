@@ -29,9 +29,8 @@ public class Article extends TimeStamped {
     private String imageUrl;
 
 
-    @ElementCollection
-    @CollectionTable(name = "article_tag", joinColumns = @JoinColumn(name = "article_id"))
-    private Set<String> tag;
+    @Column(nullable = true)
+    private String tag;
 
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -52,7 +51,7 @@ public class Article extends TimeStamped {
         this.content = articleCreateRequestDto.getContent();
         this.imageUrl = postImg;
         this.user = user;
-        this.tag = articleCreateRequestDto.getTag();
+        this.tag = String.join(",", articleCreateRequestDto.getTag());
     }
 
 

@@ -12,7 +12,7 @@ public class ArticleCreateRequestDto {
     private String content;
 
     @NotNull
-    private Set<String> tag;
+    private Set<String> tag;;
 
 
     public ArticleCreateRequestDto(String content, Set<String> tag) {

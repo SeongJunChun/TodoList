@@ -10,5 +10,5 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     List<Article> findAllByOrderByCreatedAtDesc();
     List<Article> findAllByUserIdOrderByCreatedAtDesc(Long userId);
-    List<Article> findAllByTagIn(Set<String> tags);
+    List<Article> findAllByTagContaining(String tag);
 }

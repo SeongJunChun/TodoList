@@ -39,7 +39,7 @@ public class ArticleService {
         return new ArticleResponseDto(article, false);
     }
 
-    public List<ArticleResponseDto> readAllArticles(User user) {
+    public List<ArticleResponseDto> readAllArticles(User user,String method) {
         List<Article> articles = articleRepository.findAllByOrderByCreatedAtDesc();
 
         if (user == null) { // 로그인 하지 않은 사용자
@@ -49,7 +49,7 @@ public class ArticleService {
                 articleResponseDtoList.add(new ArticleResponseDto(article, false));
             }
 
-            return articleResponseDtoList;
+            return sortResponse(articleResponseDtoList,method);
         } else {
             Optional<User> contextUser = userRepository.findById(user.getId());
             List<ArticleResponseDto> articleResponseDtoList = new ArrayList<>();
@@ -70,7 +70,7 @@ public class ArticleService {
                 articleResponseDtoList.add(new ArticleResponseDto(article, isLike));
             }
 
-            return articleResponseDtoList;
+            return sortResponse(articleResponseDtoList,method);
         }
     }
     public List<ArticleResponseDto> readArticles(User user,Long userId) {
@@ -142,9 +142,9 @@ public class ArticleService {
                 }
             }
         }
-    public List<ArticleResponseDto> searchArticles(Set<String> tags,String method,User user) {
+    public List<ArticleResponseDto> searchArticles(String tag,String method,User user) {
         //List<Article> articles = articleRepository.findAllByTagIn(tags);
-        Set<Article> articles = new HashSet<>(articleRepository.findAllByTagIn(tags));
+        Set<Article> articles = new HashSet<>(articleRepository.findAllByTagContaining(tag));
 
         if (user == null) { // 로그인 하지 않은 사용자
             List<ArticleResponseDto> articleResponseDtoList = new ArrayList<>();

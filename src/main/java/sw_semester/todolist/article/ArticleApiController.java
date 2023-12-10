@@ -27,9 +27,9 @@ public class ArticleApiController {
     }
 
     @GetMapping("/api/articles")
-    public List<ArticleResponseDto> readAllArticles(@AuthenticationPrincipal User user){
+    public List<ArticleResponseDto> readAllArticles(@AuthenticationPrincipal User user,@RequestParam(name="method") String method){
 
-        return articleService.readAllArticles(user);
+        return articleService.readAllArticles(user,method);
     }
     @GetMapping("/api/userArticles/{userId}")
     public List<ArticleResponseDto> readArticles(@AuthenticationPrincipal User user,@PathVariable(name="userId") Long userId){
@@ -38,7 +38,7 @@ public class ArticleApiController {
     }
 
     @GetMapping("/api/articles/search")
-    public List<ArticleResponseDto> searchArticles(@RequestParam(name="keyword") Set<String> keyword, @RequestParam(name="method") String method, @AuthenticationPrincipal User user) {
+    public List<ArticleResponseDto> searchArticles(@RequestParam(name="keyword") String keyword, @RequestParam(name="method") String method, @AuthenticationPrincipal User user) {
         return articleService.searchArticles(keyword,method,user);
     }
 
