@@ -3,9 +3,11 @@ package sw_semester.todolist.loginpackage.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import sw_semester.todolist.domain.User;
 import sw_semester.todolist.follow.FollowRequestException;
 import sw_semester.todolist.loginpackage.exception.UserRequestException;
 import sw_semester.todolist.loginpackage.service.AuthService;
@@ -45,6 +47,15 @@ public class AuthenticationController {
             }
         }
         return ResponseEntity.ok(service.authenticate(request));
+    }
+    @PostMapping("/check-password")
+    public boolean isMatchPassword(@RequestBody PasswordRequest passwordRequest,@AuthenticationPrincipal User user){
+        return service.checkPassword(passwordRequest,user);
+    }
+
+    @PutMapping("/change-password")
+    public void passwordModify(@RequestBody PasswordChangeRequest passwordChangeRequest, @AuthenticationPrincipal User user){
+        service.changePassword(passwordChangeRequest,user);
     }
 
 }

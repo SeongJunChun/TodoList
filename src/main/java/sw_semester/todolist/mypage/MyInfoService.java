@@ -46,7 +46,7 @@ public class MyInfoService {
                 throw new UserRequestException(errorMessage,errorMap);
             }
             String profileImg =found.get().getProfileImageUrl();
-            if (!profileImg.equals("https://todoserver.s3.ap-northeast-2.amazonaws.com/static/%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84.jpg")){
+            if (profileImg!=null){
                 s3Uploader.fileDelete(profileImg);
             }
             String postImg = s3Uploader.upload(image, "images");

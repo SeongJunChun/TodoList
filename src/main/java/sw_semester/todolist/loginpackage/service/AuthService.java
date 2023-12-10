@@ -6,9 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sw_semester.todolist.domain.UserInfo;
-import sw_semester.todolist.loginpackage.controller.AuthenticationRequest;
-import sw_semester.todolist.loginpackage.controller.AuthenticationResponse;
-import sw_semester.todolist.loginpackage.controller.RegisterRequest;
+import sw_semester.todolist.loginpackage.controller.*;
 import sw_semester.todolist.domain.User;
 import sw_semester.todolist.domain.Role;
 import sw_semester.todolist.loginpackage.exception.UserRequestException;
@@ -115,5 +113,23 @@ public class AuthService {
                 .expired(false)
                 .build();
         tokenRepository.save(token);
+    }
+
+    public boolean checkPassword(PasswordRequest passwordRequest,User user){
+        System.out.println();
+        if(passwordEncoder.matches(passwordRequest.getPassword(),user.getMemberPassword())){
+            return true;
+        }
+        return false;
+    }
+    public void changePassword(PasswordChangeRequest passwordChangeRequest,User user){
+        if(!passwordChangeRequest.getChangePassword1().equals(passwordChangeRequest.getChangePassword2())){
+            String errorMessage = "입력한 비밀번호가 일치하지 않습니다.";
+            Map<String,String> errorMap = new HashMap<>();
+            errorMap.put("password",errorMessage);
+            throw new UserRequestException(errorMessage,errorMap);
+        }
+        user.setMemberPassword(passwordEncoder.encode(passwordChangeRequest.getChangePassword1()));
+        repository.save(user);
     }
 }
