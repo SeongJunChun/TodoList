@@ -31,11 +31,17 @@ public class MonGoal {
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
+    @Column
+    private Boolean isDone;
+
+
     public MonGoal(MonGoalDto monGoalDto, User user){
         this.month=monGoalDto.getMonth();
         this.monGoal=monGoalDto.getMonGoal();
         this.year=monGoalDto.getYear();
         this.user=user;
-
+        this.id=monGoalDto.getId();
+        this.isDone = monGoalDto.getIsDone();
     }
+
 }

@@ -8,6 +8,9 @@ import sw_semester.todolist.domain.MonGoal;
 import sw_semester.todolist.domain.User;
 import sw_semester.todolist.domain.YearGoal;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,33 +35,35 @@ public class GoalController {
     @PutMapping("/updateYearGoal/{id}")
     public ResponseEntity<YearGoalDto> updateYearGoal(
             @PathVariable Long id,
+            @RequestParam(required = false) Boolean isDone,
             @RequestBody Map<String, String> requestBody,
             @AuthenticationPrincipal User user) {
         String updatedYearGoal = requestBody.get("updatedYearGoal");
-        YearGoalDto updatedDto = goalService.updateYGoal(id, updatedYearGoal, user);
+        YearGoalDto updatedDto = goalService.updateYGoal(id, updatedYearGoal, isDone, user);
         return ResponseEntity.ok(updatedDto);
     }
 
     @PutMapping("/updateMonGoal/{id}")
     public ResponseEntity<MonGoalDto> updateMonGoal(
             @PathVariable Long id,
+            @RequestParam(required = false) Boolean isDone,
             @RequestBody Map<String, String> requestBody,
             @AuthenticationPrincipal User user) {
         String updatedMonGoal = requestBody.get("updatedMonGoal");
-        MonGoalDto updatedDto = goalService.updateMGoal(id, updatedMonGoal, user);
+        MonGoalDto updatedDto = goalService.updateMGoal(id, updatedMonGoal, isDone, user);
         return ResponseEntity.ok(updatedDto);
     }
 
 
     @GetMapping("/findYearGoals")
-    public ResponseEntity<List<YearGoalDto>> findYearGoals(@RequestParam Long year, @AuthenticationPrincipal User user) {
-        List<YearGoal> yearGoals = goalService.findByYear(year, user);
+    public ResponseEntity<List<YearGoalDto>> findYearGoals(@RequestParam Long year, @RequestParam Long userId) {
+        List<YearGoal> yearGoals = goalService.findByYear(year, userId);
         return ResponseEntity.ok(convertToYearGoalDtoList(yearGoals));
     }
 
     @GetMapping("/findMonthGoals")
-    public ResponseEntity<List<MonGoalDto>> findMonthGoals(@RequestParam Long month, @AuthenticationPrincipal User user) {
-        List<MonGoal> monthGoals = goalService.findByMonth(month, user);
+    public ResponseEntity<List<MonGoalDto>> findMonthGoals(@RequestParam Long month, @RequestParam Long userId) {
+        List<MonGoal> monthGoals = goalService.findByMonth(month, userId);
         return ResponseEntity.ok(convertToMonGoalDtoList(monthGoals));
     }
     private List<YearGoalDto> convertToYearGoalDtoList(List<YearGoal> yearGoals) {
@@ -68,6 +73,7 @@ public class GoalController {
                     dto.setId(yearGoal.getId());
                     dto.setYear(yearGoal.getYear());
                     dto.setYearGoal(yearGoal.getYearGoal());
+                    dto.setIsDone(yearGoal.getIsDone());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -81,10 +87,12 @@ public class GoalController {
                     dto.setYear(monGoal.getYear());
                     dto.setMonth(monGoal.getMonth());
                     dto.setMonGoal(monGoal.getMonGoal());
+                    dto.setIsDone(monGoal.getIsDone());
                     return dto;
                 })
                 .collect(Collectors.toList());
     }
+
 
 
     @DeleteMapping("/deleteYearGoal/{id}")
@@ -97,5 +105,17 @@ public class GoalController {
     public ResponseEntity<String> deleteMonGoal(@PathVariable Long id, @AuthenticationPrincipal User user) {
         goalService.deleteMonGoal(id);
         return ResponseEntity.ok("MonGoal deleted successfully");
+    }
+
+    @GetMapping("/getYearAndMonthGoal")
+    public ResponseEntity<List<AllGoalResponseDto>> getYearAndMonthGoal(
+            @RequestParam Long year,
+            @RequestParam Long userId) {
+        try {
+            List<AllGoalResponseDto> goals = goalService.getYearAndMonthGoal(year, userId);
+            return ResponseEntity.ok(goals);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
