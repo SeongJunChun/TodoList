@@ -13,8 +13,8 @@ import java.util.Optional;
 
 @Repository
 public interface MonGoalRepository extends JpaRepository<MonGoal,Long> {
-    List<MonGoal> findByMonth(Long month);
+    List<MonGoal> findByMonthAndUserId(Long month, Long userId);
     Optional<MonGoal> findByIdAndUser(Long id, User user);
-    Optional<MonGoal> findByIdAndUserAndYearAndMonth(Long id, User user, Long year, Long month);
+    List<MonGoal>findAllByYearAndUserId(Long year, Long userId);
 
 }
