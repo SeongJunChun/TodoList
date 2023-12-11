@@ -33,7 +33,8 @@ public class CommentService {
                     comment.getCreatedAt(),
                     comment.getModifiedAt(),
                     comment.getUser().getMemberName(),
-                    comment.getUser().getProfileImageUrl()
+                    comment.getUser().getProfileImageUrl(),
+                    comment.getUser().getId()
             );
             commentResponseDtos.add(commentResponseDto);
         }

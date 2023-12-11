@@ -10,6 +10,8 @@ public class CommentResponseDto {
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
     private final String commentAuthor;
+
+    private final Long commentAuthorId;
     private final String commentAuthorProfileImageUrl;
     private final Long articleId;
     private final Long commentId;
@@ -23,6 +25,7 @@ public class CommentResponseDto {
 //        this.commentAuthorProfileImageUrl = commentAuthorProfileImageUrl;
 //    }
 
+
     public CommentResponseDto(Comment comment){
         this.articleId = comment.getArticle().getId();
         this.commentId = comment.getId();
@@ -31,11 +34,11 @@ public class CommentResponseDto {
         this.modifiedAt = comment.getModifiedAt();
         this.commentAuthor = comment.getUser().getMemberName();
         this.commentAuthorProfileImageUrl = comment.getUser().getProfileImageUrl();
+        this.commentAuthorId = comment.getUser().getId();
     }
-
     public CommentResponseDto(Long articleId, Long commentId, String content,
                               LocalDateTime createdAt, LocalDateTime modifiedAt,
-                               String commentAuthor, String commentAuthorProfileImageUrl){
+                               String commentAuthor, String commentAuthorProfileImageUrl,Long userId){
         this.articleId = articleId;
         this.commentId = commentId;
         this.content = content;
@@ -43,5 +46,6 @@ public class CommentResponseDto {
         this.modifiedAt = modifiedAt;
         this.commentAuthor = commentAuthor;
         this.commentAuthorProfileImageUrl = commentAuthorProfileImageUrl;
+        this.commentAuthorId = userId;
     }
 }
