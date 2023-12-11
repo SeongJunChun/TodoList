@@ -91,6 +91,7 @@ public class AuthService {
         saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .userId(user.getId())
                 .build();
     }
     //유저 로그인/회원가입에 해당
