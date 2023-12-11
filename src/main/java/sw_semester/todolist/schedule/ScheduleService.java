@@ -24,8 +24,8 @@ public class ScheduleService {
     private InterestService interestService;
 
     @Transactional
-    public List<Schedule> findByDate(LocalDate date) {
-        return scheduleRepository.findByDate(date);
+    public List<Schedule> findByDate(LocalDate date, Long userId) {
+        return scheduleRepository.findByDateAndUserId(date, userId);
     }
 
     @Transactional
