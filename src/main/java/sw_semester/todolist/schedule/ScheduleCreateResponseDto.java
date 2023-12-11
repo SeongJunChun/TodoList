@@ -23,9 +23,9 @@ public class ScheduleCreateResponseDto {
     private Set<DayOfWeek> daysOfWeek;
     private LocalDate repeatEndDate;
     private Set<String> interests;
-    private Set<String> tags;
+    private String tags;
 
-    public ScheduleCreateResponseDto(Long id, String headline, String context, Boolean isRepeat, LocalDate repeatEndDate, LocalDate date, LocalTime time, Set<String> tags, Set<String> interests, User user, Set<DayOfWeek> daysOfWeek) {
+    public ScheduleCreateResponseDto(Long id, String headline, String context, Boolean isRepeat, LocalDate repeatEndDate, LocalDate date, LocalTime time, String tags, Set<String> interests, User user, Set<DayOfWeek> daysOfWeek) {
         this.id = id;
         this.date = date;
         this.repeatEndDate = repeatEndDate;

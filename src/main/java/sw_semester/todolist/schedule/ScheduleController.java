@@ -8,10 +8,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sw_semester.todolist.domain.Schedule;
 import sw_semester.todolist.domain.User;
-import sw_semester.todolist.domain.UserInfo;
-import sw_semester.todolist.loginpackage.exception.UserRequestExceptionHandler;
-import sw_semester.todolist.repository.MemberRepository;
-import sw_semester.todolist.repository.UserInfoRepository;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -34,8 +30,8 @@ public class ScheduleController {
 
 
     @GetMapping("/scheduleByDate")
-    public Map<String, Object> getScheduleByDate(@RequestParam(name = "Date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate selectedDate,@RequestParam(name = "userId") Long userId) {
-        List<Schedule> schedules = scheduleService.findByDate(selectedDate, userId);
+    public Map<String, Object> getScheduleByDate(@RequestParam(name = "selectedDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate selectedDate) {
+        List<Schedule> schedules = scheduleService.findByDate(selectedDate);
         Map<String, Object> response = new HashMap<>();
 
         if (!schedules.isEmpty()) {
@@ -60,6 +56,8 @@ public class ScheduleController {
         }
         return response;
     }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateSchedule(@RequestBody ScheduleRequestDto requestDto, @PathVariable("id") Long id,@AuthenticationPrincipal User user) {
@@ -87,32 +85,21 @@ public class ScheduleController {
         Map<String, Object> response = new HashMap<>();
 
         if (!schedules.isEmpty()) {
-            Map<Long, Map<String, Object>> userScheduleMap = schedules.stream()
-                    .collect(Collectors.toMap(
-                            schedule -> schedule.getUser().getId(),
-                            schedule -> {
-                                Map<String, Object> scheduleInfo = new HashMap<>();
-                                scheduleInfo.put("username", schedule.getUser().getMemberName());
-                                scheduleInfo.put("profile", schedule.getUser().getProfileImageUrl());
-                                scheduleInfo.put("userId", schedule.getUser().getId());
-                                scheduleInfo.put("headlines", new ArrayList<>());
-                                return scheduleInfo;
-                            },
-                            (existing, replacement) -> existing
-                    ));
+            List<Map<String, Object>> scheduleInfoList = schedules.stream()
+                    .map(schedule -> {
+                        Map<String, Object> scheduleInfo = new HashMap<>();
+                        scheduleInfo.put("headline", schedule.getHeadline());
+                        scheduleInfo.put("username", schedule.getUser().getUsername());
+                        scheduleInfo.put("profile",schedule.getUser().getProfileImageUrl());
+                        scheduleInfo.put("userId",schedule.getUser().getId());
+                        return scheduleInfo;
+                    })
+                    .collect(Collectors.toList());
 
-            schedules.forEach(schedule -> {
-                Map<String, Object> userScheduleInfo = userScheduleMap.get(schedule.getUser().getId());
-                List<String> headlines = (List<String>) userScheduleInfo.get("headlines");
-                headlines.add(schedule.getHeadline());
-            });
-
-            response.put("userSchedules", userScheduleMap.values());
+            response.put("schedules", scheduleInfoList);
         }
-
         return response;
     }
-
 
 
     @GetMapping("/findByTags")
@@ -121,32 +108,23 @@ public class ScheduleController {
         Map<String, Object> response = new HashMap<>();
 
         if (!schedules.isEmpty()) {
-            Map<Long, Map<String, Object>> userScheduleMap = schedules.stream()
-                    .collect(Collectors.toMap(
-                            schedule -> schedule.getUser().getId(),
-                            schedule -> {
-                                Map<String, Object> scheduleInfo = new HashMap<>();
-                                scheduleInfo.put("username", schedule.getUser().getMemberName());
-                                scheduleInfo.put("profile", schedule.getUser().getProfileImageUrl());
-                                scheduleInfo.put("userId", schedule.getUser().getId());
-                                scheduleInfo.put("headlines", new ArrayList<>());
-                                return scheduleInfo;
-                            },
-                            (existing, replacement) -> existing
-                    ));
+            Set<Long> uniqueScheduleIds = new HashSet<>();
+            List<Map<String, Object>> scheduleInfoList = schedules.stream()
+                    .filter(schedule -> uniqueScheduleIds.add(schedule.getId()))
+                    .map(schedule -> {
+                        Map<String, Object> scheduleInfo = new HashMap<>();
+                        scheduleInfo.put("headline", schedule.getHeadline());
+                        scheduleInfo.put("user", schedule.getUser().getUsername());
+                        scheduleInfo.put("profile",schedule.getUser().getProfileImageUrl());
+                        scheduleInfo.put("userId",schedule.getUser().getId());
+                        return scheduleInfo;
+                    })
+                    .collect(Collectors.toList());
 
-            schedules.forEach(schedule -> {
-                Map<String, Object> userScheduleInfo = userScheduleMap.get(schedule.getUser().getId());
-                List<String> headlines = (List<String>) userScheduleInfo.get("headlines");
-                headlines.add(schedule.getHeadline());
-            });
-
-            response.put("userSchedules", userScheduleMap.values());
+            response.put("schedules", scheduleInfoList);
         }
-
         return response;
     }
-
 
     @GetMapping("/findAllSchedules")
     public Map<String, Object> getAllSchedules() {
@@ -154,29 +132,19 @@ public class ScheduleController {
         Map<String, Object> response = new HashMap<>();
 
         if (!schedules.isEmpty()) {
-            Map<Long, Map<String, Object>> userScheduleMap = schedules.stream()
-                    .collect(Collectors.toMap(
-                            schedule -> schedule.getUser().getId(),
-                            schedule -> {
-                                Map<String, Object> scheduleInfo = new HashMap<>();
-                                scheduleInfo.put("username", schedule.getUser().getMemberName());
-                                scheduleInfo.put("profile", schedule.getUser().getProfileImageUrl());
-                                scheduleInfo.put("userId", schedule.getUser().getId());
-                                scheduleInfo.put("headlines", new ArrayList<>());
-                                return scheduleInfo;
-                            },
-                            (existing, replacement) -> existing
-                    ));
+            List<Map<String, Object>> scheduleInfoList = schedules.stream()
+                    .map(schedule -> {
+                        Map<String, Object> scheduleInfo = new HashMap<>();
+                        scheduleInfo.put("headline", schedule.getHeadline());
+                        scheduleInfo.put("username", schedule.getUser().getUsername());
+                        scheduleInfo.put("profile", schedule.getUser().getProfileImageUrl());
+                        scheduleInfo.put("userId", schedule.getUser().getId());
+                        return scheduleInfo;
+                    })
+                    .collect(Collectors.toList());
 
-            schedules.forEach(schedule -> {
-                Map<String, Object> userScheduleInfo = userScheduleMap.get(schedule.getUser().getId());
-                List<String> headlines = (List<String>) userScheduleInfo.get("headlines");
-                headlines.add(schedule.getHeadline());
-            });
-
-            response.put("userSchedules", userScheduleMap.values());
+            response.put("schedules", scheduleInfoList);
         }
-
         return response;
     }
 

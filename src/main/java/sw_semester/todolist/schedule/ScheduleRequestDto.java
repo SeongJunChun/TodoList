@@ -19,7 +19,7 @@ public class ScheduleRequestDto {
     private LocalDate repeatEndDate;
     private Set<DayOfWeek> daysOfWeek;
     private Set<String> interests;
-    private Set<String> tags;
+    private String tags;
 
 
     public boolean Repeat() {
