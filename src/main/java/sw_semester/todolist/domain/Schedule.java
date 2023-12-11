@@ -54,8 +54,9 @@ public class Schedule {
     @CollectionTable(name = "schedule_interests", joinColumns = @JoinColumn(name = "schedule_id"))
     private Set<String> interests;
 
-    @Column
-    private String tags;
+    @ElementCollection
+    @CollectionTable(name = "schedule_tags", joinColumns = @JoinColumn(name = "schedule_id"))
+    private Set<String> tags;
 
 
     public Schedule(ScheduleRequestDto requestDto,User user){
@@ -68,6 +69,7 @@ public class Schedule {
         this.isRepeat=requestDto.getIsRepeat();
         this.repeatEndDate=requestDto.getRepeatEndDate();
         this.interests=requestDto.getInterests();
+        this.tags=requestDto.getTags();
     }
 
 }
