@@ -37,6 +37,8 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .cors()
+                .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jetAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout()
