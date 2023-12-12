@@ -39,7 +39,9 @@ public class GoalController {
             @RequestBody Map<String, String> requestBody,
             @AuthenticationPrincipal User user) {
         String updatedYearGoal = requestBody.get("updatedYearGoal");
-        YearGoalDto updatedDto = goalService.updateYGoal(id, updatedYearGoal, isDone, user);
+        String isDoneString = (String) requestBody.get("isDone");
+        Boolean Done = Boolean.valueOf(isDoneString);
+        YearGoalDto updatedDto = goalService.updateYGoal(id, updatedYearGoal, Done, user);
         return ResponseEntity.ok(updatedDto);
     }
 
@@ -50,7 +52,9 @@ public class GoalController {
             @RequestBody Map<String, String> requestBody,
             @AuthenticationPrincipal User user) {
         String updatedMonGoal = requestBody.get("updatedMonGoal");
-        MonGoalDto updatedDto = goalService.updateMGoal(id, updatedMonGoal, isDone, user);
+        String isDoneString = (String) requestBody.get("isDone");
+        Boolean Done = Boolean.valueOf(isDoneString);
+        MonGoalDto updatedDto = goalService.updateMGoal(id, updatedMonGoal, Done, user);
         return ResponseEntity.ok(updatedDto);
     }
 
